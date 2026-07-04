@@ -1,4 +1,4 @@
-# LuckyStrike-Windows-CleanUP v2.0 🚀
+# LuckyStrike-WindowsCleanUP v2.0 🚀
 
 An advanced, smart, and highly configurable system maintenance and automation script for Windows 10 and Windows 11. Built with robust error handling, multi-level logging, and intelligent file locking bypass mechanisms.
 
