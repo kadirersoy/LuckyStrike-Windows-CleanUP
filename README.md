@@ -32,8 +32,8 @@ An advanced, smart, and highly configurable system maintenance and automation sc
 
 ## 🚀 How to Use
 
-1. Download the latest `LuckyStrike-Windows-CleanUP.bat` file from this repository.
-2. **Right-click** on `LuckyStrike-Windows-CleanUP.bat` and select **"Run as administrator"** *(Crucial for Step 15 & 16)*.
+1. Download the latest `LuckyStrike-WindowsCleanUP.bat` file from this repository.
+2. **Right-click** on `LuckyStrike-WindowsCleanUP.bat` and select **"Run as administrator"** *(Crucial for Step 15 & 16)*.
 3. Sit back and let the automated cleanup process run.
 4. When all 16 steps are completed, press:
    - `R` to **Reboot** the PC immediately.
@@ -65,7 +65,7 @@ An advanced, smart, and highly configurable system maintenance and automation sc
 
 ## ⚙️ Configuration & Parameters
 
-You can easily customize the script behavior by editing the variables at the top of the `LuckyStrike-Windows-CleanUP.bat` file with any text editor (e.g., Notepad):
+You can easily customize the script behavior by editing the variables at the top of the `LuckyStrike-WindowsCleanUP.bat` file with any text editor (e.g., Notepad):
 
 ### Enable / Disable Modules
 Set any step to `ON` or `OFF`:
