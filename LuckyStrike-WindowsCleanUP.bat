@@ -1,22 +1,18 @@
 @echo off
-title Lucky-CleanUP v2.0 - Gelismis Sistem Bakimi
+title LuckyStrike-Windows-CleanUP v2.0 - Gelismis Sistem Bakimi
 color 0B
 chcp 65001 >nul 2>&1
 
 :: Log klasörünü ve master log dosyasını hazırla
 SET "LOG_DIR=%APPDATA%\LuckyCleanTemp"
 if not exist "%LOG_DIR%" mkdir "%LOG_DIR%" >nul 2>&1
-SET "MASTER_LOG=%LOG_DIR%\LuckyCleanUP_Log.txt"
+SET "MASTER_LOG=%LOG_DIR%\LuckyStrike-Windows-CleanUP_Log.txt"
 
 :: ==========================================
 :: PARAMETRELER
 :: ==========================================
 SET ENABLE_LOGGING=ON
-:: ON = Log yazar, OFF = Log dosyası oluşturmaz
-
 SET LOG_LEVEL=5
-:: 1=FATAL, 2=ERROR, 3=WARNING, 4=INFO, 5=DEBUG
-
 SET CLEAN_TEMP=ON
 SET CLEAN_UPDATE=ON
 SET CLEAN_EXPLORER_RECENT=ON
@@ -35,7 +31,6 @@ SET CLEAN_DEFENDER=OFF
 SET CLEAN_DISM=ON
 :: ==========================================
 
-:: Baslangic zamanini kaydet
 set "t=%TIME: =0%"
 set "START_CLOCK=%t:~0,8%"
 for /f "tokens=1-4 delims=:,." %%a in ("%t%") do (
@@ -43,10 +38,9 @@ for /f "tokens=1-4 delims=:,." %%a in ("%t%") do (
     set /a "TOTAL_S_CSEC=1%%d-100"
 )
 
-:: Master log dosyasini baslat
 if /I "%ENABLE_LOGGING%"=="ON" (
     echo ================================================================================ > "%MASTER_LOG%" 2>nul
-    echo [INFO] [%DATE% %START_CLOCK%] Lucky-CleanUP v2.0 Baslatildi (Log Level: %LOG_LEVEL%) >> "%MASTER_LOG%" 2>nul
+    echo [INFO] [%DATE% %START_CLOCK%] LuckyStrike-Windows-CleanUP v2.0 Baslatildi (Log Level: %LOG_LEVEL%) >> "%MASTER_LOG%" 2>nul
     echo ================================================================================ >> "%MASTER_LOG%" 2>nul
 )
 
@@ -54,14 +48,20 @@ echo ===========================================================================
 echo.
 echo   +--------------------------------------------------------------------------+
 echo   ^|                                                                          ^|
-echo   ^|                  L U C K Y   -   C L E A N   U P                         ^|
+echo   ^|             L U C K Y S T R I K E   -   C L E A N   U P                  ^|
 echo   ^|             Gelismis Sistem Bakim ve Temizleme Araci                     ^|
 echo   ^|                            Surum v2.0                                    ^|
 echo   ^|                                                                          ^|
 echo   +--------------------------------------------------------------------------+
 echo.
+:: YÖNETİCİ KONTROLÜ
+fltmc >nul 2>&1
+if %ERRORLEVEL% NEQ 0 (
+    powershell -NoProfile -Command "Write-Host ' [WARNING] ADMINISTRATOR PRIVILEGES ARE REQUIRED FOR FULL FUNCTIONALITY!' -ForegroundColor Red; Write-Host ' To execute all 16 steps without errors (DISM, Defender, Services, Logs),' -ForegroundColor Red; Write-Host ' please RIGHT-CLICK the script file and select \"Run as administrator\".' -ForegroundColor Red"
+    echo ================================================================================
+)
 echo ================================================================================
-echo           [LUCKY-CLEANUP] TEMIZLIK ISLEMLERI BASLIYOR...
+echo           [LuckyStrike-Windows-CleanUP] TEMIZLIK ISLEMLERI BASLIYOR...
 echo           Baslangic Saati: %START_CLOCK%
 echo ================================================================================
 echo.
@@ -208,7 +208,9 @@ call :TIMER_START "Kucuk Resim ve Simge Onbellegi" 2>nul
     for /f "delims=" %%F in ('dir /b "%LOCALAPPDATA%\Microsoft\Windows\Explorer\thumbcache_*.db" 2^>nul') do call :SMART_DELETE_FILE "%LOCALAPPDATA%\Microsoft\Windows\Explorer\%%F"
     start explorer.exe >nul 2>&1
 ) > "%LOG_DIR%\s12.out" 2> "%LOG_DIR%\s12.err"
-call :EVALUATE_STEP "s12" 2>nul
+:: Hata analizi: Eger kilitli dosya varsa uyari ver, yoksa normal bitir
+findstr /i "denied" "%LOG_DIR%\s12.err" >nul 2>&1
+if %ERRORLEVEL% EQU 0 (echo [KILITLI - KULLANILIYOR]) else (call :EVALUATE_STEP "s12" 2>nul)
 goto STEP13
 :SKIP12
 call :LOG_SKIP "Kucuk Resim ve Simge Onbellegi" 2>nul
@@ -285,15 +287,14 @@ if %MIN% equ 0 (set "TOTAL_TIME=%SEC%.%CSEC_STR% sn") else (set "TOTAL_TIME=%MIN
 
 if /I "%ENABLE_LOGGING%"=="ON" if %LOG_LEVEL% GEQ 4 echo [INFO] [%DATE% %END_CLOCK%] Tum Islemler Tamamlandi. Toplam Sure: %TOTAL_TIME% >> "%MASTER_LOG%" 2>nul
 
-:: Gecici adim loglarini temizle
 del /f /q "%LOG_DIR%\s*.out" "%LOG_DIR%\s*.err" "%LOG_DIR%\step_*.log" >nul 2>&1
 
 echo ================================================================================
-echo           [LUCKY-CLEANUP] TUM ISLEMLER TAMAMLANDI!
+echo           [LuckyStrike-Windows-CleanUP] TUM ISLEMLER TAMAMLANDI!
 echo           Bitis Saati : %END_CLOCK%
 echo           Toplam Sure : %TOTAL_TIME%
 if /I "%ENABLE_LOGGING%"=="ON" (
-    echo           Log Konumu  : %MASTER_LOG%
+    echo           Log Konumu  : %%APPDATA%%\LuckyCleanTemp\LuckyStrike-Windows-CleanUP_Log.txt
 ) else (
     echo           Log Durumu  : Kapali
 )
@@ -315,7 +316,7 @@ if %ERRORLEVEL% EQU 83 (
 goto :eof
 
 :: ==========================================
-:: ALT PROGRAMLAR (SÜRE, AKILLI SİLME & LOG)
+:: ALT PROGRAMLAR
 :: ==========================================
 :SMART_DELETE
 if not exist "%~1" goto :eof
