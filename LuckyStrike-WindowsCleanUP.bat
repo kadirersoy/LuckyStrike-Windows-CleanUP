@@ -1,7 +1,20 @@
 @echo off
-title LuckyStrike-Windows-CleanUP v2.0 - Gelismis Sistem Bakimi
+title LuckyStrike-Windows-CleanUP v3.0 - Gelismis Windows Bakimi
 color 0B
 chcp 65001 >nul 2>&1
+
+:: ANSI Renk Kodlarini Aktif Et (Windows 10/11 icin)
+for /F "tokens=1,2 delims=#" %%a in ('"prompt #$H#$E# & echo on & for %%b in (1) do rem"') do (
+    set "ESC=%%b"
+)
+set "C_RESET=%ESC%[0m"
+set "C_GREEN=%ESC%[1;32m"
+set "C_YELLOW=%ESC%[1;33m"
+set "C_CYAN=%ESC%[1;36m"
+set "C_RED=%ESC%[1;31m"
+set "C_MAGENTA=%ESC%[1;35m"
+set "C_WHITE=%ESC%[1;37m"
+set "C_LINE=%ESC%[38;5;39m"
 
 :: Log klasörünü ve master log dosyasını hazırla
 SET "LOG_DIR=%APPDATA%\LuckyCleanTemp"
@@ -31,6 +44,62 @@ SET CLEAN_DEFENDER=OFF
 SET CLEAN_DISM=ON
 :: ==========================================
 
+:MAIN_MENU
+cls
+echo %C_LINE%================================================================================%C_RESET%
+echo.
+echo %C_LINE%  +--------------------------------------------------------------------------+%C_RESET%
+echo %C_LINE%  ^|                                                                          ^|%C_RESET%
+echo %C_WHITE%  ^|             L U C K Y S T R I K E   -   C L E A N   U P                  ^|%C_RESET%
+echo %C_LINE%  ^|             Gelismis Windows Bakim ve Temizleme Araci                    ^|%C_RESET%
+echo %C_LINE%  ^|                            Surum v3.0                                    ^|%C_RESET%
+echo %C_LINE%  ^|                                                                          ^|%C_RESET%
+echo %C_LINE%  +--------------------------------------------------------------------------+%C_RESET%
+echo.
+echo %C_WHITE%                                  A N A  M E N U                                 %C_RESET%
+echo %C_LINE%================================================================================%C_RESET%
+echo.
+echo    %C_GREEN%[1]  Temizlik Islemlerini Baslat%C_RESET%
+echo.
+echo    %C_YELLOW%[2]  Uygulamalari Guncelle (Winget Upgrade --all)%C_RESET%
+echo.
+echo    %C_CYAN%[3]  Bilgisayari Yeniden Baslat%C_RESET%
+echo.
+echo    %C_RED%[4]  Bilgisayari Kapat%C_RESET%
+echo.
+echo    %C_MAGENTA%[*]  Cikis icin herhangi bir tusa basiniz...%C_RESET%
+echo.
+echo %C_LINE%================================================================================%C_RESET%
+echo %C_WHITE% Lütfen yapmak istediğiniz işlemin tuşuna basınız:%C_RESET%
+
+:: PowerShell ile Enter gerektirmeyen anında tuş algılama ve çıkış motoru
+for /f "delims=" %%k in ('PowerShell -NoProfile -Command "$k = $Host.UI.RawUI.ReadKey('NoEcho,IncludeKeyDown'); $k.Character"') do set "KEY=%%k"
+
+if "%KEY%"=="1" goto CLEANUP_PROCESS
+if "%KEY%"=="2" goto WINGET_PROCESS
+if "%KEY%"=="3" shutdown /r /t 0
+if "%KEY%"=="4" shutdown /s /t 0
+
+:: 1, 2, 3, 4 haricinde herhangi bir tuşa (boşluk, enter, harf, sayı) basıldığında anında çık
+goto :eof
+
+:WINGET_PROCESS
+cls
+echo %C_LINE%================================================================================%C_RESET%
+echo %C_WHITE% [WINGET] Uygulamalar guncelleniyor...%C_RESET%
+echo %C_LINE%================================================================================%C_RESET%
+winget upgrade --all
+echo.
+echo %C_LINE%================================================================================%C_RESET%
+echo %C_GREEN% [WINGET] Guncelleme islemi basariyla tamamlandi.%C_RESET%
+echo %C_LINE%--------------------------------------------------------------------------------%C_RESET%
+echo %C_YELLOW% Ana menuye donmek icin herhangi bir tusa basiniz...%C_RESET%
+echo %C_LINE%================================================================================%C_RESET%
+pause >nul
+goto MAIN_MENU
+
+:CLEANUP_PROCESS
+cls
 set "t=%TIME: =0%"
 set "START_CLOCK=%t:~0,8%"
 for /f "tokens=1-4 delims=:,." %%a in ("%t%") do (
@@ -40,7 +109,7 @@ for /f "tokens=1-4 delims=:,." %%a in ("%t%") do (
 
 if /I "%ENABLE_LOGGING%"=="ON" (
     echo ================================================================================ > "%MASTER_LOG%" 2>nul
-    echo [INFO] [%DATE% %START_CLOCK%] LuckyStrike-Windows-CleanUP v2.0 Baslatildi (Log Level: %LOG_LEVEL%) >> "%MASTER_LOG%" 2>nul
+    echo [INFO] [%DATE% %START_CLOCK%] LuckyStrike-Windows-CleanUP v3.0 Baslatildi (Log Level: %LOG_LEVEL%) >> "%MASTER_LOG%" 2>nul
     echo ================================================================================ >> "%MASTER_LOG%" 2>nul
 )
 
@@ -49,8 +118,8 @@ echo.
 echo   +--------------------------------------------------------------------------+
 echo   ^|                                                                          ^|
 echo   ^|             L U C K Y S T R I K E   -   C L E A N   U P                  ^|
-echo   ^|             Gelismis Sistem Bakim ve Temizleme Araci                     ^|
-echo   ^|                            Surum v2.0                                    ^|
+echo   ^|             Gelismis Windows Bakim ve Temizleme Araci                    ^|
+echo   ^|                            Surum v3.0                                    ^|
 echo   ^|                                                                          ^|
 echo   +--------------------------------------------------------------------------+
 echo.
@@ -289,31 +358,21 @@ if /I "%ENABLE_LOGGING%"=="ON" if %LOG_LEVEL% GEQ 4 echo [INFO] [%DATE% %END_CLO
 
 del /f /q "%LOG_DIR%\s*.out" "%LOG_DIR%\s*.err" "%LOG_DIR%\step_*.log" >nul 2>&1
 
-echo ================================================================================
-echo           [LuckyStrike-Windows-CleanUP] TUM ISLEMLER TAMAMLANDI!
-echo           Bitis Saati : %END_CLOCK%
-echo           Toplam Sure : %TOTAL_TIME%
-if /I "%ENABLE_LOGGING%"=="ON" (
-    echo           Log Konumu  : %%APPDATA%%\LuckyCleanTemp\LuckyStrike-Windows-CleanUP_Log.txt
-) else (
-    echo           Log Durumu  : Kapali
-)
-echo ================================================================================
 echo.
-echo Press [R] to Reboot, [S] to Shutdown, or any other key to Exit...
-PowerShell -NoProfile -Command "$k = $Host.UI.RawUI.ReadKey('NoEcho,IncludeKeyDown'); if ($k.Character -eq 'R' -or $k.Character -eq 'r') { exit 82 } elseif ($k.Character -eq 'S' -or $k.Character -eq 's') { exit 83 } else { exit 0 }"
-
-if %ERRORLEVEL% EQU 82 (
-    if /I "%ENABLE_LOGGING%"=="ON" if %LOG_LEVEL% GEQ 4 echo [INFO] [%TIME:~0,8%] Kullanici istegiyle sistem yeniden baslatiliyor... >> "%MASTER_LOG%" 2>nul
-    shutdown /r /t 0
-    goto :eof
+echo %C_LINE%================================================================================%C_RESET%
+echo %C_GREEN%           [LuckyStrike-Windows-CleanUP] TUM ISLEMLER TAMAMLANDI!          %C_RESET%
+echo %C_WHITE%           Bitis Saati : %END_CLOCK%                                        %C_RESET%
+echo %C_WHITE%           Toplam Sure : %TOTAL_TIME%                                       %C_RESET%
+if /I "%ENABLE_LOGGING%"=="ON" (
+    echo %C_WHITE%           Log Konumu  : %%APPDATA%%\LuckyCleanTemp\LuckyStrike-Windows-CleanUP_Log.txt %C_RESET%
+) else (
+    echo %C_WHITE%           Log Durumu  : Kapali                                         %C_RESET%
 )
-if %ERRORLEVEL% EQU 83 (
-    if /I "%ENABLE_LOGGING%"=="ON" if %LOG_LEVEL% GEQ 4 echo [INFO] [%TIME:~0,8%] Kullanici istegiyle sistem kapatiliyor... >> "%MASTER_LOG%" 2>nul
-    shutdown /s /t 0
-    goto :eof
-)
-goto :eof
+echo %C_LINE%--------------------------------------------------------------------------------%C_RESET%
+echo %C_YELLOW% Ana menuye donmek icin herhangi bir tusa basiniz...                          %C_RESET%
+echo %C_LINE%================================================================================%C_RESET%
+pause >nul
+goto MAIN_MENU
 
 :: ==========================================
 :: ALT PROGRAMLAR
