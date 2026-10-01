@@ -1,0 +1,20 @@
+# Build Results
+[Bb]in/
+[Oo]bj/
+[Ll]og/
+
+# Visual Studio / IDE temporary files
+.vs/
+*.user
+*.suo
+*.userosscache
+*.sln.docstates
+
+# Windows thumbnail & desktop caches
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+
+# App Runtime Logs
+LuckyCleanTemp/
+*.log
