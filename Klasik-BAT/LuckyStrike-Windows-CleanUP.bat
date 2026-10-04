@@ -128,7 +128,8 @@ for /f "tokens=1-4 delims=:,." %%a in ("%t%") do (
 )
 
 :: Temizlik oncesi C: bos alanini al
-for /f "delims=" %%B in ('PowerShell -NoProfile -Command "[math]::Round((Get-PSDrive C).Free / 1GB, 2)"') do set "INITIAL_FREE_GB=%%B"
+for /f "delims=" %%B in ('PowerShell -NoProfile -Command "([System.IO.DriveInfo]'C').AvailableFreeSpace"') do set "INITIAL_FREE_BYTES=%%B"
+for /f "delims=" %%B in ('PowerShell -NoProfile -Command "[string][math]::Round(%INITIAL_FREE_BYTES% / 1GB, 2) + ' GB Bos'"') do set "INITIAL_FREE_GB=%%B"
 
 if /I "%ENABLE_LOGGING%"=="ON" (
     echo ================================================================================ > "%MASTER_LOG%" 2>nul
@@ -424,8 +425,8 @@ if %D_CSEC% lss 10 (set "CSEC_STR=0%D_CSEC%") else (set "CSEC_STR=%D_CSEC%")
 if %MIN% equ 0 (set "TOTAL_TIME=%SEC%.%CSEC_STR% sn") else (set "TOTAL_TIME=%MIN% dk %SEC%.%CSEC_STR% sn")
 
 :: Temizlik sonrasi C: bos alanini ve kazanilan alani hesapla
-for /f "delims=" %%B in ('PowerShell -NoProfile -Command "[math]::Round((Get-PSDrive C).Free / 1GB, 2)"') do set "FINAL_FREE_GB=%%B"
-for /f "delims=" %%G in ('PowerShell -NoProfile -Command "$diff = [math]::Round(%FINAL_FREE_GB% - %INITIAL_FREE_GB%, 2); if ($diff -gt 0) { \"$diff GB\" } else { \"Onbellek Temizlendi\" }"') do set "FREED_SPACE_STR=%%G"
+for /f "delims=" %%B in ('PowerShell -NoProfile -Command "([System.IO.DriveInfo]'C').AvailableFreeSpace"') do set "FINAL_FREE_BYTES=%%B"
+for /f "delims=" %%G in ('PowerShell -NoProfile -Command "$d = ([int64]%FINAL_FREE_BYTES% - [int64]%INITIAL_FREE_BYTES%); if ($d -gt 1073741824) { [string][math]::Round($d / 1GB, 2) + ' GB' } elseif ($d -gt 1048576) { [string][math]::Round($d / 1MB, 2) + ' MB' } elseif ($d -gt 0) { [string][math]::Round($d / 1KB, 2) + ' KB' } else { 'Onbellek Temizlendi' }"') do set "FREED_SPACE_STR=%%G"
 
 if /I "%ENABLE_LOGGING%"=="ON" if %LOG_LEVEL% GEQ 4 echo [INFO] [%DATE% %END_CLOCK%] Tum Islemler Tamamlandi. Sure: %TOTAL_TIME%, Kazanc: %FREED_SPACE_STR% >> "%MASTER_LOG%" 2>nul
 

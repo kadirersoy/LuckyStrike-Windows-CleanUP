@@ -129,9 +129,10 @@
                         <Button x:Name="BtnRelaunchAdmin" Click="BtnRelaunchAdmin_Click" Visibility="Collapsed" Style="{StaticResource ToolBtnStyle}" Margin="10,0,0,0" Content="Yönetici Olarak Yeniden Başlat" Background="#E65100" Foreground="White" BorderBrush="#FF6D00"/>
                     </StackPanel>
 
-                    <!-- Window Control Buttons (Min, Close) -->
+                    <!-- Window Control Buttons (Min, Max, Close) -->
                     <StackPanel Grid.Column="3" Orientation="Horizontal" VerticalAlignment="Center">
                         <Button Click="BtnMinimize_Click" Width="36" Height="28" Background="Transparent" BorderThickness="0" Foreground="#9AA0B4" FontSize="15" Content="—" Cursor="Hand"/>
+                        <Button x:Name="BtnMaximize" Click="BtnMaximize_Click" Width="36" Height="28" Background="Transparent" BorderThickness="0" Foreground="#9AA0B4" FontSize="13" Content="🗖" Cursor="Hand"/>
                         <Button Click="BtnClose_Click" Width="36" Height="28" Background="Transparent" BorderThickness="0" Foreground="#FF5252" FontSize="16" FontWeight="Bold" Content="✕" Cursor="Hand"/>
                     </StackPanel>
                 </Grid>

@@ -82,7 +82,7 @@ namespace LuckyStrikeCleanUp
         {
             _engine.LogCallback = delegate(string level, string msg)
             {
-                Dispatcher.Invoke(new Action(delegate
+                Dispatcher.BeginInvoke(new Action(delegate
                 {
                     AppendConsoleLine(string.Format("[{0:HH:mm:ss}] [{1}] {2}", DateTime.Now, level, msg));
                 }));
@@ -90,7 +90,7 @@ namespace LuckyStrikeCleanUp
 
             _engine.ProgressCallback = delegate(int percent, string currentStep)
             {
-                Dispatcher.Invoke(new Action(delegate
+                Dispatcher.BeginInvoke(new Action(delegate
                 {
                     MainProgressBar.Value = percent;
                     TxtProgressPercent.Text = string.Format("{0}%", percent);
@@ -101,6 +101,10 @@ namespace LuckyStrikeCleanUp
 
         private void AppendConsoleLine(string text)
         {
+            if (TxtConsole.Text.Length > 120000)
+            {
+                TxtConsole.Text = TxtConsole.Text.Substring(30000);
+            }
             TxtConsole.AppendText(text + Environment.NewLine);
             TxtConsole.ScrollToEnd();
         }
@@ -329,8 +333,33 @@ namespace LuckyStrikeCleanUp
 
         private void TitleBar_MouseDown(object sender, MouseButtonEventArgs e)
         {
-            if (e.ChangedButton == MouseButton.Left)
+            if (e.ClickCount == 2)
+            {
+                ToggleMaximize();
+            }
+            else if (e.ChangedButton == MouseButton.Left)
+            {
                 DragMove();
+            }
+        }
+
+        private void BtnMaximize_Click(object sender, RoutedEventArgs e)
+        {
+            ToggleMaximize();
+        }
+
+        private void ToggleMaximize()
+        {
+            if (WindowState == WindowState.Maximized)
+            {
+                WindowState = WindowState.Normal;
+                BtnMaximize.Content = "🗖";
+            }
+            else
+            {
+                WindowState = WindowState.Maximized;
+                BtnMaximize.Content = "🗗";
+            }
         }
 
         private void BtnMinimize_Click(object sender, RoutedEventArgs e)
