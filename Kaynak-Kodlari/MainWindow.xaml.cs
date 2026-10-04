@@ -27,6 +27,7 @@ namespace LuckyStrikeCleanUp
 
             CheckAdminPrivileges();
             WireEngineCallbacks();
+            UpdateDriveCStatus();
 
             AppendConsoleLine("LuckyStrike-Windows-CleanUP v3.0 Pro Masaüstü Sistemi Hazır.");
             AppendConsoleLine("18 Temizlik modülü yapılandırıldı. 'Temizliği Başlat' butonuna tıklayabilirsiniz.\n");
@@ -143,9 +144,9 @@ namespace LuckyStrikeCleanUp
 
                 if (!string.IsNullOrEmpty(freedSpace))
                 {
-                    TxtFreedDisk.Text = string.Format("Kazanılan Alan: {0}", freedSpace);
+                    TxtFreedDisk.Text = string.Format("Kazanılan: {0}", freedSpace);
                     FreedDiskBadge.Visibility = Visibility.Visible;
-                    TxtStatusSummary.Text = string.Format("Temizlik başarıyla tamamlandı! Kazanılan Alan: {0}", freedSpace);
+                    TxtStatusSummary.Text = string.Format("Temizlik tamamlandı! {0}", freedSpace);
                 }
                 else
                 {
@@ -159,6 +160,7 @@ namespace LuckyStrikeCleanUp
             }
             finally
             {
+                UpdateDriveCStatus();
                 BtnStartCleanup.Visibility = Visibility.Visible;
                 BtnStopCleanup.Visibility = Visibility.Collapsed;
                 BtnWinget.IsEnabled = true;
@@ -169,6 +171,19 @@ namespace LuckyStrikeCleanUp
                     _cts = null;
                 }
             }
+        }
+
+        private void UpdateDriveCStatus()
+        {
+            try
+            {
+                string formatted = _engine.GetDriveSpaceFormatted("C");
+                if (!string.IsNullOrEmpty(formatted))
+                {
+                    TxtDriveCStatus.Text = formatted;
+                }
+            }
+            catch { }
         }
 
         private void BtnStopCleanup_Click(object sender, RoutedEventArgs e)
@@ -217,7 +232,7 @@ namespace LuckyStrikeCleanUp
             {
                 await _engine.RunWingetUpgradeAsync(delegate(string line)
                 {
-                    Dispatcher.Invoke(new Action(delegate
+                    Dispatcher.BeginInvoke(new Action(delegate
                     {
                         AppendConsoleLine(line);
                     }));

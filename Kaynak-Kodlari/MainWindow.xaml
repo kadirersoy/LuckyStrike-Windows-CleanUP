@@ -8,11 +8,12 @@
         Title="LuckyStrike Windows CleanUP v3.0" 
         Icon="app.ico"
         Height="780" Width="1180"
-        MinHeight="680" MinWidth="980"
+        MinHeight="660" MinWidth="980"
         WindowStartupLocation="CenterScreen"
         WindowStyle="None"
         AllowsTransparency="True"
         Background="Transparent"
+        ResizeMode="CanResizeWithGrip"
         FontFamily="Segoe UI, Segoe UI Variable, Arial">
 
     <Window.Resources>
@@ -146,21 +147,27 @@
                         <ColumnDefinition Width="Auto"/>
                     </Grid.ColumnDefinitions>
 
-                    <!-- Left: Quick Description & Disk Badge -->
+                    <!-- Left: Quick Description, Drive C Space & Disk Badge -->
                     <StackPanel Grid.Column="0" VerticalAlignment="Center" Margin="0,0,16,0">
                         <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
                             <TextBlock Text="Sistem Bakımı" Foreground="White" FontSize="18" FontWeight="Bold"/>
-                            <Border x:Name="FreedDiskBadge" Visibility="Collapsed" Background="#1E3A2F" CornerRadius="4" Padding="8,2" Margin="10,0,0,0">
-                                <TextBlock x:Name="TxtFreedDisk" Text="Kazanılan Alan: 0 MB" Foreground="#00E676" FontWeight="Bold" FontSize="11"/>
+                            <Border x:Name="DriveCBadge" Background="#1C2138" BorderBrush="#2F3654" BorderThickness="1" CornerRadius="6" Padding="8,3" Margin="12,0,0,0">
+                                <StackPanel Orientation="Horizontal">
+                                    <TextBlock Text="💾 C: " Foreground="#8A92A6" FontWeight="SemiBold" FontSize="11"/>
+                                    <TextBlock x:Name="TxtDriveCStatus" Text="Bilgi alınıyor..." Foreground="#CBD5E1" FontWeight="Bold" FontSize="11"/>
+                                </StackPanel>
+                            </Border>
+                            <Border x:Name="FreedDiskBadge" Visibility="Collapsed" Background="#1E3A2F" CornerRadius="6" BorderBrush="#00E676" BorderThickness="1" Padding="8,3" Margin="8,0,0,0">
+                                <TextBlock x:Name="TxtFreedDisk" Text="Kazanılan: 0 MB" Foreground="#00E676" FontWeight="Bold" FontSize="11"/>
                             </Border>
                         </StackPanel>
-                        <TextBlock Text="Tek tıkla derin temizlik ve sistem hızlandırma." Foreground="#8A92A6" FontSize="12" Margin="0,3,0,0"/>
+                        <TextBlock Text="Tek tıkla derin temizlik, önbellek boşaltma ve sistem optimizasyonu." Foreground="#8A92A6" FontSize="12" Margin="0,4,0,0"/>
                     </StackPanel>
 
                     <!-- Right: Action Buttons -->
                     <StackPanel Grid.Column="1" Orientation="Horizontal" VerticalAlignment="Center">
                         <!-- Start Cleanup Button -->
-                        <Button x:Name="BtnStartCleanup" Click="BtnStartCleanup_Click" Style="{StaticResource ActionBtnStyle}" Background="#00B4D8" Margin="0,0,8,0">
+                        <Button x:Name="BtnStartCleanup" Click="BtnStartCleanup_Click" ToolTip="Seçili temizlik modüllerini sırayla ve güvenle çalıştırır" Style="{StaticResource ActionBtnStyle}" Background="#00B4D8" Margin="0,0,8,0">
                             <StackPanel Orientation="Horizontal">
                                 <TextBlock Text="🚀" FontSize="15" Margin="0,0,6,0"/>
                                 <TextBlock Text="Temizliği Başlat" FontSize="13" FontWeight="Bold"/>
@@ -168,7 +175,7 @@
                         </Button>
 
                         <!-- Stop Cleanup Button (Initially Collapsed) -->
-                        <Button x:Name="BtnStopCleanup" Click="BtnStopCleanup_Click" Visibility="Collapsed" Style="{StaticResource ActionBtnStyle}" Background="#E53935" Margin="0,0,8,0">
+                        <Button x:Name="BtnStopCleanup" Click="BtnStopCleanup_Click" ToolTip="Devam eden temizlik işlemlerini güvenle durdurur" Visibility="Collapsed" Style="{StaticResource ActionBtnStyle}" Background="#E53935" Margin="0,0,8,0">
                             <StackPanel Orientation="Horizontal">
                                 <TextBlock Text="⏹" FontSize="14" Margin="0,0,6,0"/>
                                 <TextBlock Text="Durdur" FontSize="13" FontWeight="Bold"/>
@@ -176,7 +183,7 @@
                         </Button>
 
                         <!-- Create Restore Point Button -->
-                        <Button x:Name="BtnRestorePoint" Click="BtnRestorePoint_Click" Style="{StaticResource ToolBtnStyle}" Margin="0,0,8,0" Padding="10,8">
+                        <Button x:Name="BtnRestorePoint" Click="BtnRestorePoint_Click" ToolTip="İşlem öncesi Windows Sistem Geri Yükleme Noktası oluşturur" Style="{StaticResource ToolBtnStyle}" Margin="0,0,8,0" Padding="10,8">
                             <StackPanel Orientation="Horizontal">
                                 <TextBlock Text="🛡️" FontSize="13" Margin="0,0,5,0"/>
                                 <TextBlock Text="Geri Yükleme Noktası" FontSize="12"/>
@@ -184,7 +191,7 @@
                         </Button>
 
                         <!-- Winget Upgrade Button -->
-                        <Button x:Name="BtnWinget" Click="BtnWinget_Click" Style="{StaticResource ActionBtnStyle}" Background="#E5A93C" Margin="0,0,8,0">
+                        <Button x:Name="BtnWinget" Click="BtnWinget_Click" ToolTip="Tüm kurulu programları Microsoft Winget ile günceller" Style="{StaticResource ActionBtnStyle}" Background="#E5A93C" Margin="0,0,8,0">
                             <StackPanel Orientation="Horizontal">
                                 <TextBlock Text="📦" FontSize="14" Margin="0,0,6,0"/>
                                 <TextBlock Text="Uygulamaları Güncelle" FontSize="12" FontWeight="SemiBold"/>
@@ -192,7 +199,7 @@
                         </Button>
 
                         <!-- Restart PC Button -->
-                        <Button Click="BtnRestartPC_Click" Style="{StaticResource ToolBtnStyle}" Margin="0,0,6,0" Padding="10,8">
+                        <Button Click="BtnRestartPC_Click" ToolTip="Açık çalışmalarınızı kaydettikten sonra bilgisayarı yeniden başlatır" Style="{StaticResource ToolBtnStyle}" Margin="0,0,6,0" Padding="10,8">
                             <StackPanel Orientation="Horizontal">
                                 <TextBlock Text="🔄" FontSize="12" Margin="0,0,5,0"/>
                                 <TextBlock Text="Yeniden Başlat" FontSize="11"/>
@@ -200,7 +207,7 @@
                         </Button>
 
                         <!-- Shutdown PC Button -->
-                        <Button Click="BtnShutdownPC_Click" Style="{StaticResource ToolBtnStyle}" Padding="10,8">
+                        <Button Click="BtnShutdownPC_Click" ToolTip="Bilgisayarı güvenli şekilde kapatır" Style="{StaticResource ToolBtnStyle}" Padding="10,8">
                             <StackPanel Orientation="Horizontal">
                                 <TextBlock Text="⚡" FontSize="12" Margin="0,0,5,0"/>
                                 <TextBlock Text="Kapat" FontSize="11"/>

@@ -32,16 +32,21 @@ LuckyStrike-Windows-CleanUP/
 
 ---
 
+> [!IMPORTANT]
+> **📢 Klasik .BAT Betiği İçin Destek Sonu (End of Support):**  
+> v3.0 sürümü itibarıyla klasik `.BAT` betiği dondurulmuş olup, bundan sonraki sürümlerde dağıtımdan kaldırılacaktır. Projenin tüm yeni özellikleri, performans ve stabilite geliştirmeleri yalnızca **`LuckyStrike-CleanUP.exe`** masaüstü uygulaması üzerinden sunulacaktır.
+
+---
+
 ## 🚀 Kullanım
 
-### 1. Modern Masaüstü Uygulaması (Önerilen)
+### Modern Masaüstü Uygulaması (.EXE)
 - **`Uygulama`** klasöründeki **`LuckyStrike-CleanUP.exe`** dosyasına çift tıklayın (UAC izin ekranı açılacaktır).
 - 18 temizlik adımından dilediklerinizi seçin.
 - **🚀 Temizliği Başlat** butonuna basın.
-- Temizlik bitiminde kazanılan toplam disk alanı ve harcanan süre ekranda görüntülenecektir.
+- Canlı konsoldan adımları takip edebilir, temizlik bitiminde kazanılan toplam disk alanı ve silinen dosya miktarını görüntüleyebilirsiniz.
 
-### 2. Klasik Konsol (.BAT) Betiği
-- **`Klasik-BAT`** klasöründeki **`LuckyStrike-Windows-CleanUP.bat`** dosyasına sağ tıklayıp **Yönetici Olarak Çalıştır**'ı seçin.
+*(Not: Eski `Klasik-BAT` klasöründeki `.bat` betiği geriye dönük arşiv amaçlı korunmakta olup yeni özellikler almayacaktır.)*
 
 ---
 

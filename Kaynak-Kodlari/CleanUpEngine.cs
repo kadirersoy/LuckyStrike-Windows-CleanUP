@@ -177,6 +177,28 @@ namespace LuckyStrikeCleanUp
             return 0;
         }
 
+        public Tuple<long, long> GetDriveSpaceStats(string driveLetter = "C")
+        {
+            try
+            {
+                var drive = new DriveInfo(driveLetter);
+                if (drive.IsReady)
+                    return Tuple.Create(drive.AvailableFreeSpace, drive.TotalSize);
+            }
+            catch { }
+            return Tuple.Create(0L, 0L);
+        }
+
+        public string GetDriveSpaceFormatted(string driveLetter = "C")
+        {
+            var stats = GetDriveSpaceStats(driveLetter);
+            if (stats.Item2 > 0)
+            {
+                return string.Format("{0} Boş / {1}", FormatBytes(stats.Item1), FormatBytes(stats.Item2));
+            }
+            return "";
+        }
+
         public static string FormatBytes(long bytes)
         {
             if (bytes <= 0) return "0 B";
@@ -375,6 +397,17 @@ namespace LuckyStrikeCleanUp
                     try
                     {
                         SHEmptyRecycleBin(IntPtr.Zero, null, SHERB_NOCONFIRMATION | SHERB_NOPROGRESSUI | SHERB_NOSOUND);
+                        foreach (var drive in DriveInfo.GetDrives())
+                        {
+                            if (drive.IsReady && (drive.DriveType == DriveType.Fixed || drive.DriveType == DriveType.Removable))
+                            {
+                                try
+                                {
+                                    SHEmptyRecycleBin(IntPtr.Zero, drive.Name, SHERB_NOCONFIRMATION | SHERB_NOPROGRESSUI | SHERB_NOSOUND);
+                                }
+                                catch { }
+                            }
+                        }
                     }
                     catch (Exception ex)
                     {
@@ -616,6 +649,10 @@ namespace LuckyStrikeCleanUp
                 }
                 catch { }
             }
+
+            // 7. Microsoft Edge WebView2 (Uygulamaların gömülü web motoru önbellekleri)
+            string webView2User = Path.Combine(localApp, @"Microsoft\EdgeWebView\User Data");
+            CleanChromiumBase(webView2User, ref hasWarning, token);
         }
 
         private void CleanChromiumBase(string userDataPath, ref bool hasWarning, CancellationToken token)
@@ -651,6 +688,7 @@ namespace LuckyStrikeCleanUp
             string winOld = @"C:\Windows.old";
             string winBt = @"C:\$Windows.~BT";
             string winWs = @"C:\$Windows.~WS";
+            string winCurrent = @"C:\$GetCurrent";
 
             if (Directory.Exists(winOld))
             {
@@ -672,6 +710,13 @@ namespace LuckyStrikeCleanUp
                 RunCommandSync("takeown", "/F \"C:\\$Windows.~WS\" /A /R /D Y", token);
                 RunCommandSync("icacls", "\"C:\\$Windows.~WS\" /grant *S-1-5-32-544:F /T /C /Q", token);
                 SmartDeleteDirectory(winWs, ref hasWarning, token);
+            }
+            if (Directory.Exists(winCurrent))
+            {
+                WriteLog("INFO", "C:\\$GetCurrent tespit edildi, temizleniyor...");
+                RunCommandSync("takeown", "/F \"C:\\$GetCurrent\" /A /R /D Y", token);
+                RunCommandSync("icacls", "\"C:\\$GetCurrent\" /grant *S-1-5-32-544:F /T /C /Q", token);
+                SmartDeleteDirectory(winCurrent, ref hasWarning, token);
             }
         }
 
@@ -764,6 +809,7 @@ namespace LuckyStrikeCleanUp
                     DeleteDirectoryInternal(sub, ref hasWarning, token);
                     try
                     {
+                        sub.Attributes = FileAttributes.Normal;
                         sub.Delete();
                     }
                     catch { }
