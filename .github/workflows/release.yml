@@ -1,0 +1,57 @@
+name: Build & Release LuckyStrike CleanUP
+
+on:
+  push:
+    branches: [ main ]
+    tags:
+      - 'v*'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    name: Build & Package (x64)
+    runs-on: windows-latest
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Setup MSBuild
+        uses: microsoft/setup-msbuild@v2
+
+      - name: Build WPF Application (Release x64)
+        run: |
+          msbuild LuckyStrikeCleanUp.sln /p:Configuration=Release /p:Platform="x64" /m
+
+      - name: Package Release Assets
+        id: package
+        shell: powershell
+        run: |
+          $ver = if ($env:GITHUB_REF_TYPE -eq 'tag') { $env:GITHUB_REF_NAME } else { "v1.0.0" }
+          $zipName = "LuckyStrike-CleanUP-$ver-x64.zip"
+          
+          # Create staging folder for zip
+          $stage = New-Item -ItemType Directory -Path "staging" -Force
+          Copy-Item "src\bin\Release\LuckyStrike-CleanUP.exe" -Destination "$stage\LuckyStrike-CleanUP.exe"
+          if (Test-Path "LICENSE") { Copy-Item "LICENSE" -Destination "$stage\" }
+          if (Test-Path "README.md") { Copy-Item "README.md" -Destination "$stage\" }
+          
+          Compress-Archive -Path "$stage\*" -DestinationPath $zipName -Force
+          Write-Output "Created $zipName"
+
+      - name: Publish GitHub Release
+        if: startsWith(github.ref, 'refs/tags/v')
+        uses: softprops/action-gh-release@v2
+        with:
+          name: LuckyStrike CleanUP ${{ github.ref_name }}
+          files: |
+            src/bin/Release/LuckyStrike-CleanUP.exe
+            LuckyStrike-CleanUP-*-x64.zip
+          generate_release_notes: true
+          draft: false
+          prerelease: false
