@@ -29,7 +29,7 @@ namespace LuckyStrikeCleanUp
             WireEngineCallbacks();
             UpdateDriveCStatus();
 
-            AppendConsoleLine("LuckyStrike-Windows-CleanUP v3.0 Pro Masaüstü Sistemi Hazır.");
+            AppendConsoleLine("LuckyStrike-Windows-CleanUP Masaüstü Sistemi Hazır.");
             AppendConsoleLine("18 Temizlik modülü yapılandırıldı. 'Temizliği Başlat' butonuna tıklayabilirsiniz.\n");
         }
 

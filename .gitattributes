@@ -1,0 +1,11 @@
+# Auto detect text files and perform LF normalization
+* text=auto
+
+# Language Statistics (Keep primary language C# at 100%)
+docs/** linguist-documentation
+src/**/*.xaml linguist-vendored
+src/**/*.manifest linguist-vendored
+src/**/*.csproj linguist-vendored
+*.sln linguist-vendored
+LICENSE linguist-documentation
+README.md linguist-documentation

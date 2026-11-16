@@ -247,7 +247,7 @@ namespace LuckyStrikeCleanUp
             Interlocked.Exchange(ref _totalFilesDeleted, 0);
 
             WriteLog("INFO", "================================================================================");
-            WriteLog("INFO", string.Format("LuckyStrike-Windows-CleanUP v3.0 Temizlik Başlatıldı. Yönetici: {0}", IsAdministrator()));
+            WriteLog("INFO", string.Format("LuckyStrike-Windows-CleanUP Temizlik Başlatıldı. Yönetici: {0}", IsAdministrator()));
             WriteLog("INFO", "================================================================================");
 
             long initialFree = GetFreeDiskSpaceBytes("C");

@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:LuckyStrikeCleanUp"
         mc:Ignorable="d"
-        Title="LuckyStrike Windows CleanUP v3.0" 
+        Title="LuckyStrike Windows CleanUP" 
         Icon="app.ico"
         Height="780" Width="1180"
         MinHeight="660" MinWidth="980"
@@ -116,7 +116,7 @@
                             <Image Source="app.png" RenderOptions.BitmapScalingMode="HighQuality"/>
                         </Border>
                         <TextBlock Text="LuckyStrike-Windows-CleanUP" Foreground="White" FontWeight="Bold" FontSize="14" VerticalAlignment="Center"/>
-                        <TextBlock Text="v3.0 Pro" Foreground="#00D2FF" FontWeight="SemiBold" FontSize="12" Margin="8,0,0,0" VerticalAlignment="Center"/>
+                        <TextBlock Text="Pro Edition" Foreground="#00D2FF" FontWeight="SemiBold" FontSize="12" Margin="8,0,0,0" VerticalAlignment="Center"/>
                     </StackPanel>
 
                     <!-- Admin Status Badge -->
@@ -371,7 +371,7 @@
                     </StackPanel>
 
                     <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
-                        <TextBlock Text="LuckyStrike-Windows-CleanUP v3.0 Pro | Windows 10 &amp; 11" Foreground="#5E657B" FontSize="11" VerticalAlignment="Center"/>
+                        <TextBlock Text="LuckyStrike-Windows-CleanUP | Windows 10 &amp; 11" Foreground="#5E657B" FontSize="11" VerticalAlignment="Center"/>
                     </StackPanel>
                 </Grid>
             </Border>
