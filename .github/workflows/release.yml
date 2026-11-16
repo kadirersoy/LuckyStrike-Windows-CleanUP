@@ -1,4 +1,4 @@
-name: Build & Release LuckyStrike CleanUP
+name: LuckyStrike-Windows-CleanUP CI/CD Build Job
 
 on:
   push:
