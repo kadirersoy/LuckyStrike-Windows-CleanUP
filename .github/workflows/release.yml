@@ -21,6 +21,20 @@ jobs:
         with:
           fetch-depth: 0
 
+      - name: Install .NET Framework 4.5 Reference Assemblies
+        shell: powershell
+        run: |
+          $net45SdkUrl = "https://www.nuget.org/api/v2/package/Microsoft.NETFramework.ReferenceAssemblies.net45/1.0.3"
+          $sdkSystemPath = "C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework"
+          
+          Invoke-WebRequest -Uri "$net45SdkUrl" -OutFile "$env:temp\net45sdk.zip"
+          Expand-Archive -Force -LiteralPath "$env:temp\net45sdk.zip" -DestinationPath "$env:temp\net45sdk"
+          
+          if (Test-Path "$sdkSystemPath\v4.5") {
+              [System.IO.Directory]::Delete("$sdkSystemPath\v4.5", $True)
+          }
+          Move-Item -Force -LiteralPath "$env:temp\net45sdk\build\.NETFramework\v4.5" -Destination "$sdkSystemPath"
+
       - name: Setup MSBuild
         uses: microsoft/setup-msbuild@v2
 
