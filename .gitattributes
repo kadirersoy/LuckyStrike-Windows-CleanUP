@@ -3,6 +3,7 @@
 
 # Language Statistics (Keep primary language C# at 100%)
 docs/** linguist-documentation
+.github/** linguist-vendored
 src/**/*.xaml linguist-vendored
 src/**/*.manifest linguist-vendored
 src/**/*.csproj linguist-vendored
